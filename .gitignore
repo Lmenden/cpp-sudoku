@@ -1,0 +1,8 @@
+# Should be unneccesary but also shouldn't hurt (in case puzzle_fetch becomes more complex)
+__pycache__
+
+# Where we store all *.o files, and the executable upon compilation
+build/
+
+# Editor information for using ssh over vscode
+.vscode/
