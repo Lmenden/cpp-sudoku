@@ -6,7 +6,7 @@ class Variable
 {
 private:
 public:
-    int row, col;
+    int row, col, block;
     int assigned;
     std::set<int> domain;
 

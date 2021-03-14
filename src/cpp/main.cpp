@@ -22,15 +22,15 @@ int main(int argc, char **argv) {
     if(argc == 3)
     {
 
-        Board my_board = Board(grid);
-        simple_solver their_board = simple_solver(grid);
 
         auto my_start = std::chrono::high_resolution_clock::now();
+        Board my_board = Board(grid);
         backtracking_search(my_board);
         auto my_end = std::chrono::high_resolution_clock::now();
         auto my_duration = std::chrono::duration_cast<std::chrono::microseconds>(my_end - my_start);
 
         auto their_start = std::chrono::high_resolution_clock::now();
+        simple_solver their_board = simple_solver(grid);
         their_board.solveSudoku();
         auto their_end = std::chrono::high_resolution_clock::now();
         auto their_duration = std::chrono::duration_cast<std::chrono::microseconds>(their_end - their_start);

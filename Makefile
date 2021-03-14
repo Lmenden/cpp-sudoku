@@ -12,7 +12,7 @@ DEPS := $(OBJS:.o=.d)
 INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
-CXXFLAGS ?= $(INC_FLAGS) -MMD -MP -std=c++17 -Wall
+CXXFLAGS ?= $(INC_FLAGS) -MMD -MP -std=c++17 -Wall -g
 
 print-%  : ; @echo $* = $($*)
 

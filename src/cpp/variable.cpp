@@ -1,11 +1,13 @@
-#include <variable.h>
 #include <algorithm>
 #include <iterator>
+#include <constants.h>
+#include <variable.h>
 
 Variable::Variable(int row, int col, int assigned)
 {
     this->row = row;
     this->col = col;
+    this->block = row / BLOCK_SIZE * BLOCK_SIZE + col / BLOCK_SIZE;
 
     this->assigned = assigned;
     if(assigned == 0) {
@@ -33,7 +35,7 @@ bool Variable::operator<(const Variable &other) const
 // TODO --> maybe combine this with "print_domain" at some point.
 std::ostream& operator<<(std::ostream &os, Variable &var)
 {
-    os << var.assigned << ", " << "(" << var.row << "," << var.col << ")";
+    os << var.assigned << ", " << var.block << ":(" << var.row << "," << var.col << ")";
     return os;
 }
 
