@@ -19,7 +19,7 @@ for x in range(50):
             val = coordinate.get('value', '_')
 
             ## Math to index into 1D array as a 2D array
-            board[y*9 + x] = str(val)
+            board[y*SIZE + x] = str(val)
 
         ## Write out our unsolved boards
         for row in range(SIZE):

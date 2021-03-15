@@ -27,10 +27,12 @@ public:
     static std::array<std::array<int, SIZE>, SIZE> file_to_grid(std::string);
     Board(std::array<std::array<int, SIZE>, SIZE>);
 
-    std::tuple<bool, std::unordered_map<Variable*, std::set<int>>> limit(Variable*);
+    std::tuple<bool, std::unordered_map<Variable*, std::set<int>>> constrain(Variable*);
     std::set<Variable*> get_neighbors(Variable*);
     bool consistency_check(Variable*);
     void restore_inferences(std::unordered_map<Variable*, std::set<int>> &inferences);
-    
+
+    bool backtracking_search();
+
     void print_board();
 };

@@ -20,17 +20,14 @@ bool Variable::operator==(const Variable &other) const
     return col == other.col && row == other.row;
 }
 
-// TODO --> I don't think we use this function anymore unless we attempt to order the variables.
-// Look into removing it.
+// Because domains can be equal in size, this will NOT allow you to insert into sets
+//
+// Only used if sorting by most/minimum remaining values
 bool Variable::operator<(const Variable &other) const
 {
-    // Check for equality to make sure no duplicates are inserted?
-    // TODO: check to see how this effects runtime.
-    //       ALSO - it probably isn't necessary
     return domain.size() < other.domain.size();
 }
 
-// TODO --> maybe combine this with "print_domain" at some point.
 std::ostream& operator<<(std::ostream &os, Variable &var)
 {
     os << var.assigned << ", " << "(" << var.row << "," << var.col << ")";
@@ -48,16 +45,15 @@ void Variable::print_domain()
     std::cout << " }" << std::endl;
 }
 
-// Remove an int from the domain. Returns true if any elements were erased, false otherwise.
+// Remove an int from the domain. Returns true if any elements were erased, false otherwise
 bool Variable::limit_domain(int limit)
 {
     return domain.erase(limit) > 0;
 }
 
+// Given a set of integers, add these values back into the variable's domain
 void Variable::restore_domain(std::set<int> restore)
 {
-    // I read somewhere that if you use set_union with another set, it stops
-    // unnecessary iteration (instead of always trying to insert from the beginning).
     std::set<int> temp;
     std::set_union(domain.begin(), domain.end(),
                         restore.begin(), restore.end(),

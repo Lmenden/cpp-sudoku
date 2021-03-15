@@ -4,7 +4,7 @@ First project in C++. Given a file representation of a sudoku grid, will solve t
 
 By keeping track of variable domains, the solver can quickly rule out many dead ends (when a variable's domain is reduced to 0), or avoid checking impossible values (values outside of a variable's domain).
 
-This solution more complex than similar solutions provided at:
+This solution is more complex than similar solutions provided at:
 
      - https://www.tutorialspoint.com/sudoku-solver-in-cplusplus
 
@@ -26,7 +26,7 @@ So, I included a simple method for comparison. [See: Running](#running)
     
     └── h
 
-puzzle_fetch.py                 : Program to fetch puzzle files. Unfortunately, the site isn't always working
+puzzle_fetch.py                 : Program to fetch puzzle files. Unfortunately, the site seems to be down.
 
 ### Running
 

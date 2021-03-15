@@ -69,9 +69,49 @@ Board::Board(std::array<std::array<int, SIZE>, SIZE> grid)
     // Apply the inital variable constraints
     for(Variable *var: initial_inferences)
     {
-        // TODO --> make this throw an exception if provided a conflicting board assignment
-        limit(var);
+        constrain(var);
     }
+}
+
+// Recursively iterates through the sudoku grid until:
+//  (1) A correct assignemnt is found
+//  (2) No possibilities are left
+//
+//  Returns true if a solution is found, false otherwise
+bool Board::backtracking_search()
+{
+    // Assignment complete? Return assignment
+    if (unassigned.size() == 0) return true;
+
+    // The idea was to sort the variables by minimum remaining values (MRV) heuristic
+    // However, sorting seems to add more steps in almost all of my cases (not even counting sorting time...)
+    // In some cases, sorting by MOST remaining values seemed to reduce steps, but not by very much.
+    // std::sort(unassigned.rbegin(), unassigned.rend());
+    //std::sort(unassigned.begin(), unassigned.end());
+
+    Variable *var = unassigned.back();
+    unassigned.pop_back();
+
+    // Attempts
+    std::set<int> values = var->domain; // This line is unecessary if we don't modify assigned variables, but avoids future bugs.
+    for(int value: values)
+    {
+        var->assigned = value;
+
+        auto [success, new_inferences] = constrain(var);
+        if(success && backtracking_search())
+        {
+            return true;
+        }
+
+        // Otherwise, remove inferences and try again...
+        restore_inferences(new_inferences);
+    }
+
+    // Nothing worked, clear var, add to unassigned, and return
+    unassigned.push_back(var);
+    var->assigned = 0;
+    return false;
 }
 
 
@@ -83,7 +123,7 @@ Board::Board(std::array<std::array<int, SIZE>, SIZE> grid)
 // If either (1) or (2) fails, return failure along with any inferences made.
 // If a domain is reduced to 0, fail.
 // If a domain is reduced to 1, add that variable to the list, and repeat steps 1-2 on that variable.
-std::tuple<bool, std::unordered_map<Variable*, std::set<int>>> Board::limit(Variable *v)
+std::tuple<bool, std::unordered_map<Variable*, std::set<int>>> Board::constrain(Variable *v)
 {
     std::vector<Variable*> testing_variables;
     testing_variables.push_back(v);
@@ -95,12 +135,14 @@ std::tuple<bool, std::unordered_map<Variable*, std::set<int>>> Board::limit(Vari
         testing_variables.pop_back();
         if(!consistency_check(current_var))
         {
+            steps++;
             return {false, inferences};
         }
 
         std::set<Variable *> neighbors = get_neighbors(current_var);
         for(Variable *neighbor : neighbors)
         {
+            steps++;
             if(neighbor == current_var || neighbor->assigned)
             {
                 continue;
@@ -125,7 +167,6 @@ std::tuple<bool, std::unordered_map<Variable*, std::set<int>>> Board::limit(Vari
                 testing_variables.push_back(neighbor);
                 neighbor->assigned = *(neighbor->domain.begin());
             }
-            steps++;
         }
     }
 
@@ -177,11 +218,11 @@ std::set<Variable *> Board::get_neighbors(Variable *current_variable)
     return neighbors;
 }
 
-// Given an unordered map of variables --> values those variables cannot take on,
-// will restore these values to that variable's domain.
+// Given an unordered map of:
+//      Variable* : set<int>
+//  Adds the integer values from <set> back into that variable's domain.
 void Board::restore_inferences(std::unordered_map<Variable*, std::set<int>> &inferences)
 {
-    // std::cout << "Restoring those inferneces\n";
     for (auto const& [var, domain] : inferences)
     {
         if(var->assigned)

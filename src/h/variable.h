@@ -23,6 +23,12 @@ public:
     void restore_domain(std::set<int>);
 };
 
+
+// An example of specializing the hash template found in std
+// Allows you to hash custom objects without passing a hash functor to the unordered_(set,map)
+//
+// UNUSED --> since I changed from storing Variable to Variable*
+//
 // namespace std
 // {
 //     template<>
