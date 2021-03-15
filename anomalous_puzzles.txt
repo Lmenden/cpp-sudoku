@@ -1,0 +1,10 @@
+## Contains lists of of puzzles + step counts for interesting situations (odd time/step counts)
+
+## High step count for simple
+7       3286         80093
+11      1701        241576
+14      1765        154388
+17      1701        547996
+
+## High step count for mine
+37     16829         69121
